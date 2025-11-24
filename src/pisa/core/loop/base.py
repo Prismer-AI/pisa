@@ -118,7 +118,11 @@ class BaseAgentLoop(IAgentLoop):
         # 4.5 解析和注册capabilities
         self.tools = []  # FunctionTool列表
         self.handoffs = []  # Agent列表
-        self.mcp_servers = []  # MCP Server列表
+        self.mcp_servers = []  # MCP Server列表（未启动的实例）
+        
+        # MCP 生命周期管理
+        self._mcp_contexts = []  # 存储 (server, context_manager) 元组
+        self._active_mcp_servers = []  # 已启动的 MCP 服务器列表
         
         # 引用全局 capability registry（供模块使用）
         from pisa.capability.registry import get_global_registry
@@ -288,6 +292,91 @@ class BaseAgentLoop(IAgentLoop):
             _logger.error(f"Failed to resolve capabilities: {e}")
             raise
     
+    async def _start_mcp_servers(self) -> None:
+        """
+        启动所有 MCP 服务器
+        
+        MCP 服务器需要通过 async context manager 启动。
+        这个方法会：
+        1. 对每个 MCP 服务器调用 __aenter__
+        2. 将启动后的服务器存储到 _active_mcp_servers
+        3. 保存 context manager 引用用于后续清理
+        
+        Raises:
+            Exception: 如果任何 MCP 服务器启动失败
+        """
+        if not self.mcp_servers:
+            return
+        
+        _logger.info(f"Starting {len(self.mcp_servers)} MCP servers...")
+        
+        for mcp_server in self.mcp_servers:
+            try:
+                # 检查是否是 async context manager
+                if not hasattr(mcp_server, '__aenter__'):
+                    _logger.warning(
+                        f"MCP server {getattr(mcp_server, 'name', 'unknown')} "
+                        "does not support async context manager, skipping"
+                    )
+                    continue
+                
+                # 进入 context manager
+                active_server = await mcp_server.__aenter__()
+                
+                # 保存引用
+                self._mcp_contexts.append((mcp_server, None))  # 保存原始服务器引用
+                self._active_mcp_servers.append(active_server)
+                
+                server_name = getattr(mcp_server, 'name', 'unknown')
+                _logger.info(f"✓ Started MCP server: {server_name}")
+                
+            except Exception as e:
+                _logger.error(f"Failed to start MCP server: {e}")
+                # 如果启动失败，清理已启动的服务器
+                await self._stop_mcp_servers()
+                raise RuntimeError(f"Failed to start MCP server: {e}") from e
+        
+        _logger.info(f"All {len(self._active_mcp_servers)} MCP servers started successfully")
+    
+    async def _stop_mcp_servers(self) -> None:
+        """
+        关闭所有 MCP 服务器
+        
+        这个方法会：
+        1. 对每个启动的 MCP 服务器调用 __aexit__
+        2. 清理所有 context manager 引用
+        3. 清空 _active_mcp_servers 列表
+        
+        Note: 即使某些服务器关闭失败，也会尝试关闭所有服务器
+        """
+        if not self._mcp_contexts:
+            return
+        
+        _logger.info(f"Stopping {len(self._mcp_contexts)} MCP servers...")
+        
+        errors = []
+        for mcp_server, _ in self._mcp_contexts:
+            try:
+                # 退出 context manager
+                await mcp_server.__aexit__(None, None, None)
+                
+                server_name = getattr(mcp_server, 'name', 'unknown')
+                _logger.info(f"✓ Stopped MCP server: {server_name}")
+                
+            except Exception as e:
+                server_name = getattr(mcp_server, 'name', 'unknown')
+                _logger.error(f"Error stopping MCP server {server_name}: {e}")
+                errors.append((server_name, e))
+        
+        # 清理引用
+        self._mcp_contexts.clear()
+        self._active_mcp_servers.clear()
+        
+        if errors:
+            _logger.warning(f"Some MCP servers had errors during shutdown: {len(errors)}")
+        else:
+            _logger.info("All MCP servers stopped successfully")
+    
     def create_agent(
         self,
         name: str,
@@ -343,9 +432,16 @@ class BaseAgentLoop(IAgentLoop):
                 agent_kwargs['handoffs'] = self.handoffs
                 _logger.debug(f"Injecting {len(self.handoffs)} handoffs into Agent")
             
-            if self.mcp_servers:
-                agent_kwargs['mcp_servers'] = self.mcp_servers
-                _logger.debug(f"Injecting {len(self.mcp_servers)} mcp_servers into Agent")
+            # 使用已启动的 MCP 服务器（如果有）
+            if self._active_mcp_servers:
+                agent_kwargs['mcp_servers'] = self._active_mcp_servers
+                _logger.debug(f"Injecting {len(self._active_mcp_servers)} active mcp_servers into Agent")
+            elif self.mcp_servers:
+                # 如果有未启动的 MCP 服务器，警告用户
+                _logger.warning(
+                    f"Found {len(self.mcp_servers)} MCP servers but none are active. "
+                    "Did you forget to call _start_mcp_servers()?"
+                )
         
         # 应用用户提供的kwargs（可以覆盖）
         agent_kwargs.update(kwargs)

@@ -89,6 +89,10 @@ addopts = [
 ]
 norecursedirs = ["dist", "build", ".tox"]
 testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "live: marks tests that require API keys and network access (deselect with '-m \"not live\"')",
+]
 
 [tool.flake8]
 max-line-length = 88

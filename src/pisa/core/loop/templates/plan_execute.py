@@ -101,6 +101,15 @@ class PlanExecuteLoop(BaseAgentLoop):
         # 运行前钩子
         self.before_run()
         
+        # 启动所有 MCP 服务器
+        try:
+            if self.mcp_servers:
+                _logger.info(f"Starting {len(self.mcp_servers)} MCP servers...")
+                await self._start_mcp_servers()
+        except Exception as e:
+            _logger.error(f"Failed to start MCP servers: {e}")
+            raise
+        
         try:
             # 初始化State
             task_description = input_data if isinstance(input_data, str) else str(input_data)
@@ -506,6 +515,15 @@ class PlanExecuteLoop(BaseAgentLoop):
                 should_stop=True,
                 metadata={"exit_reason": "error", "error": str(e)}
             )
+        
+        finally:
+            # 确保 MCP 服务器被正确关闭
+            try:
+                if self._mcp_contexts:
+                    _logger.info("Stopping MCP servers...")
+                    await self._stop_mcp_servers()
+            except Exception as cleanup_error:
+                _logger.error(f"Error during MCP cleanup: {cleanup_error}")
     
     def _select_next_task(self, state: LoopState):
         """
