@@ -4,7 +4,7 @@ requires = ["setuptools>=46.1.0", "setuptools_scm[toml]>=5"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pisa"
+name = "pisa-python"
 version = "0.1.0"
 description = "Planning, Intelligent, Self-Adaptive Agent Framework - Build production-ready AI agents with markdown-defined workflows"
 readme = "README.md"

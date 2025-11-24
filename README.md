@@ -42,6 +42,14 @@
 
 ### Installation
 
+**From PyPI (Recommended):**
+
+```bash
+pip install pisa-python
+```
+
+**From Source:**
+
 ```bash
 # Clone the repository
 git clone https://github.com/Prismer-AI/pisa.git
