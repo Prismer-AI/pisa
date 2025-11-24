@@ -34,7 +34,7 @@
 - 📊 **Observable**: Real-time execution tracking with beautiful CLI output powered by [Rich](https://github.com/Textualize/rich)
 - 🔄 **Event-Driven**: Production-ready deployment with [Temporal](https://temporal.io/) integration
 - 🎨 **Developer-Friendly**: Intuitive CLI, comprehensive logging, and extensive documentation
-- **Context Enginnering**： 1st version ‘Pyramid Context Engineering’ solution 
+- **Context Engineering**: 1st version 'Pyramid Context Engineering' solution 
 
 ---
 
@@ -44,7 +44,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/pisa.git
+git clone https://github.com/Prismer-AI/pisa.git
 cd pisa
 
 # Install dependencies (using uv for faster installation)
@@ -240,44 +240,58 @@ Real-time execution visualization powered by [Rich](https://github.com/Textualiz
 
 | Document | Description |
 |----------|-------------|
-| [Quick Start Guide](docs/QUICK_START_v4.md) | Step-by-step tutorial for beginners |
-| [Architecture Overview](docs/IMPLEMENTATION_ROADMAP.md) | System design and architecture |
-| [Agent Definition Reference](docs/agent_template.md) | Complete agent.md specification |
-| [Capability Development](docs/capability_guide.md) | How to create custom capabilities |
-| [Loop Templates](docs/loop_templates.md) | Available agent loop patterns |
-| [API Reference](docs/api/) | Full API documentation |
+| [README](README.md) | This file - Quick start and overview |
+| [Contributing Guide](CONTRIBUTING.md) | How to contribute to PISA |
+| [CHANGELOG](CHANGELOG.rst) | Version history and release notes |
+| [Example Agent](example/agent_example/.prismer/README.md) | Full example with math & data processing |
+| [Agent Template](src/pisa/core/definition/templates/agent_template.md) | Agent definition reference |
+| [Capability README](src/pisa/capability/README.md) | Capability system documentation |
+
+**📖 Full documentation coming soon!** We're working on comprehensive guides for:
+- Quick Start Tutorial
+- Architecture Deep Dive  
+- Capability Development Guide
+- Loop Template Creation
+- API Reference
 
 ---
 
 ## 🎨 Examples
 
-### Example 1: Math & Data Processing Agent
+### Example: Math & Data Processing Agent
 
-A sophisticated agent that performs matrix operations, calculates softmax, and generates structured tables:
+A sophisticated agent that performs matrix operations, calculates softmax, and generates structured tables.
+
+**Location**: [`example/agent_example/`](example/agent_example/)
+
+**Run the example:**
 
 ```bash
-cd example/PISA5
+cd example/agent_example
 pisa run .prismer/agent.md -i "Calculate [[1,2],[3,4]] × [[5,6],[7,8]], compute softmax, and show results as a table"
 ```
 
-**Capabilities Used:**
-- `matrix_operations` (Function): Matrix math operations
-- `compute_softmax` (MCP): Softmax calculations
-- `text_to_table` (Subagent): Generate markdown tables
+**Features demonstrated:**
+- ✅ Matrix operations (Function capability)
+- ✅ Softmax calculations (MCP capability)
+- ✅ Text-to-table conversion (Subagent capability)
+- ✅ Plan-Execute loop with OODA
+- ✅ Context management and persistence
+- ✅ Rich CLI output
 
-### Example 2: Research Assistant *(coming soon)*
+**Example capabilities:**
+- `matrix_operations` - Matrix math (add, multiply, transpose, etc.)
+- `compute_softmax` - Temperature-scaled softmax
+- `softmax_with_attention` - Attention weights calculation
+- `text_to_table` - Convert text to structured tables
 
-```bash
-cd example/research-assistant
-pisa run .prismer/agent.md -i "Find recent papers on transformer architectures and summarize key findings"
-```
+### More Examples Coming Soon!
 
-### Example 3: Code Review Agent *(coming soon)*
-
-```bash
-cd example/code-reviewer
-pisa run .prismer/agent.md --file src/my_code.py
-```
+We're working on additional examples:
+- 🔜 **Research Assistant** - Web search and paper summarization
+- 🔜 **Code Review Agent** - Automated code analysis and suggestions
+- 🔜 **Data Analysis Agent** - CSV/JSON processing and visualization
+- 🔜 **Customer Support Bot** - Multi-turn conversation with knowledge base
 
 ---
 
@@ -334,7 +348,7 @@ PISA follows a clean, modular architecture:
 
 - 🔲 SOTA loop templates
 - 🔲 Context compression with LOD (Level of Detail)
-- 🔲 Temporal workflow integration for production ready deylopment
+- 🔲 Temporal workflow integration for production ready deployment
 - 🔲 Multi-agent collaboration
 - 🔲 Streaming response support
 
@@ -355,7 +369,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ```bash
 # Clone and install in development mode
-git clone https://github.com/yourusername/pisa.git
+git clone https://github.com/Prismer-AI/pisa.git
 cd pisa
 uv pip install -e ".[dev]"
 
@@ -365,8 +379,8 @@ uv run pytest tests/ -v
 # Run linter
 uv run ruff check src/
 
-# Format code
-uv run black src/
+# Format code (using ruff format)
+uv run ruff format src/
 ```
 
 ### Areas We Need Help
@@ -396,8 +410,8 @@ PISA is released under the [MIT License](LICENSE.txt).
 
 ## 📬 Contact & Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/pisa/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/pisa/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Prismer-AI/pisa/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Prismer-AI/pisa/discussions)
 - **Email**: support@prismer.ai
 - **Twitter**: [@PrismerAI](https://twitter.com/PrismerAI)
 
