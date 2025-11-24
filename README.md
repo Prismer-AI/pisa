@@ -297,7 +297,9 @@ We're working on additional examples:
 
 ## 🏗️ Architecture
 
-PISA follows a clean, modular architecture:
+PISA follows a clean, modular architecture designed for both development and production deployment:
+
+### Development Mode (Local)
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -306,58 +308,141 @@ PISA follows a clean, modular architecture:
 └─────────────────┬───────────────────────────────┘
                   │
 ┌─────────────────▼───────────────────────────────┐
-│              Loop Templates                     │
-│   (Plan-Execute, ReAct, Custom Loops)           │
-└─────────┬───────────────────────┬───────────────┘
-          │                       │
-┌─────────▼─────────┐   ┌────────▼──────────────┐
-│  Core Modules     │   │  Capability System    │
-│                   │   │                       │
-│  - Planning       │   │  - Functions          │
-│  - Execution      │   │  - MCP Servers        │
-│  - Observation    │   │  - Subagents          │
-│  - Reflection     │   │                       │
-└─────────┬─────────┘   └────────┬──────────────┘
-          │                      │
-┌─────────▼──────────────────────▼───────────────┐
+│         Agent Loop Engine (Core)                │
+│                                                 │
+│  ┌───────────────────┐   ┌──────────────────┐  │
+│  │  Loop Templates   │   │ Capability System│  │
+│  │  - Plan-Execute   │   │  - Functions     │  │
+│  │  - ReAct (soon)   │   │  - MCP Servers   │  │
+│  │  - Custom         │   │  - Subagents     │  │
+│  └─────────┬─────────┘   └────────┬─────────┘  │
+│            │                      │             │
+│  ┌─────────▼──────────────────────▼─────────┐  │
+│  │         Core Modules                     │  │
+│  │  - Planning    - Observation             │  │
+│  │  - Execution   - Reflection              │  │
+│  │  - Validation  - Context Management      │  │
+│  └──────────────────────────────────────────┘  │
+└─────────────────┬───────────────────────────────┘
+                  │
+┌─────────────────▼───────────────────────────────┐
 │          OpenAI Agent SDK Runtime              │
 │   (Messages, Tools, Handoffs, Streaming)       │
 └────────────────────────────────────────────────┘
 ```
 
+### Production Mode (Temporal Workflow)
+
+```
+┌─────────────────────────────────────────────────┐
+│              Temporal Cluster                   │
+│         (Orchestration & Durability)            │
+└─────────────────┬───────────────────────────────┘
+                  │
+┌─────────────────▼───────────────────────────────┐
+│         PISA Temporal Workflow                  │
+│                                                 │
+│  ┌──────────────────────────────────────────┐  │
+│  │  Workflow Orchestration Layer            │  │
+│  │  - State Management & Persistence        │  │
+│  │  - Checkpointing & Recovery              │  │
+│  │  - Human-in-the-Loop Support             │  │
+│  │  - Long-running Task Execution           │  │
+│  └─────────────────┬────────────────────────┘  │
+│                    │                            │
+│  ┌─────────────────▼────────────────────────┐  │
+│  │         Temporal Activities              │  │
+│  │  - Agent Loop Execution                  │  │
+│  │  - State Checkpoint Storage              │  │
+│  │  - User Notification                     │  │
+│  │  - External API Calls                    │  │
+│  └──────────────────────────────────────────┘  │
+└─────────────────┬───────────────────────────────┘
+                  │
+┌─────────────────▼───────────────────────────────┐
+│         Agent Loop Engine (Same as Dev)         │
+│   (Referenced from Development Mode above)      │
+└─────────────────────────────────────────────────┘
+```
+
 ### Key Components
 
-- **Definition Layer**: Markdown-based configuration and instructions
-- **Loop Templates**: Reusable agent behavior patterns
-- **Core Modules**: Pluggable components for agent reasoning
-- **Capability System**: Unified interface for tools, MCPs, and subagents
-- **OpenAI Agent SDK**: Underlying LLM interaction framework
+**Agent Definition Layer**
+- Markdown-based configuration (`agent.md`)
+- Declarative instructions and settings
+- Version-controlled agent specifications
+
+**Agent Loop Engine**
+- **Loop Templates**: Reusable behavior patterns (Plan-Execute, ReAct, etc.)
+- **Core Modules**: Planning, Execution, Observation, Reflection, Validation
+- **Capability System**: Unified interface for Functions, MCP Servers, and Subagents
+- **Context Management**: Pyramid Context Engineering with compression
+
+**OpenAI Agent SDK**
+- LLM interaction primitives
+- Tool/function calling
+- Agent handoffs
+- Message streaming
+
+**Temporal Workflow Layer** *(Production Only)*
+- Durable execution with automatic state persistence
+- Failure recovery and retry mechanisms
+- Long-running task support (hours/days)
+- Human-in-the-loop workflows
+- Built on [Temporal's OpenAI Agents integration](https://github.com/temporalio/sdk-python/tree/main/temporalio/contrib/openai_agents)
+
+### Execution Modes
+
+| Feature | Development Mode | Production Mode (Temporal) |
+|---------|-----------------|----------------------------|
+| **Use Case** | Local testing & iteration | Production deployment |
+| **Execution** | Direct Python process | Temporal Workflow |
+| **State** | In-memory | Durable (persisted) |
+| **Recovery** | Manual restart | Automatic retry & resume |
+| **Monitoring** | CLI logs | Temporal UI + metrics |
+| **Scalability** | Single instance | Distributed workers |
+| **Cost** | Free (local) | Infrastructure cost |
+
+### State Management
+
+PISA uses a sophisticated state management system:
+
+- **LoopState**: Centralized state for agent execution
+- **Context Compression**: Pyramid Context Engineering to manage token limits
+- **Checkpointing**: Periodic state snapshots for recovery
+- **State Serialization**: JSON-based state persistence
 
 ---
 
 ## 🛣️ Roadmap
 
-### Current (v1.0 - Alpha)
+### Current (v0.1 - Alpha)
 
 - ✅ Core framework with Plan-Execute loop
 - ✅ Function, MCP, and Subagent capabilities
 - ✅ CLI tools and rich observability
 - ✅ Markdown-based agent definition
+- ✅ Context management with Pyramid Context Engineering
+- 🚧 Temporal workflow integration (experimental)
 
-### Coming Soon (v1.1)
+### Coming Soon (v0.2 - Beta)
 
-- 🔲 SOTA loop templates
-- 🔲 Context compression with LOD (Level of Detail)
-- 🔲 Temporal workflow integration for production ready deployment
-- 🔲 Multi-agent collaboration
+- 🔲 Complete Temporal production deployment guide
+- 🔲 Additional loop templates (ReAct, ReWOO)
+- 🔲 Enhanced context compression with LOD (Level of Detail)
+- 🔲 Multi-agent collaboration patterns
 - 🔲 Streaming response support
+- 🔲 Comprehensive test coverage (target: 80%+)
 
-### Future (v2.0)
+### Future (v1.0 - Stable)
 
-- 🔲 Production level server capability for high I/O and concurrent
-- 🔲 Agent marketplace and templates
+- 🔲 Production-grade Temporal workflow orchestration
+- 🔲 High-performance server mode for concurrent agents
+- 🔲 Agent marketplace and community templates
 - 🔲 Auto-optimization with feedback loops
 - 🔲 Multi-modal support (images, audio, video)
+- 🔲 Advanced monitoring and observability
+- 🔲 Enterprise features (RBAC, audit logs, etc.)
 
 ---
 
@@ -401,9 +486,13 @@ PISA is released under the [MIT License](LICENSE.txt).
 
 ## 🙏 Acknowledgments
 
-- Built on top of [OpenAI Agent SDK](https://openai.github.io/openai-agents-python/)
-- CLI powered by [Rich](https://github.com/Textualize/rich)
-- Async runtime by [Temporal](https://temporal.io/)
+PISA is built on the shoulders of giants:
+
+- **[OpenAI Agent SDK](https://openai.github.io/openai-agents-python/)** - Core agent primitives and LLM interactions
+- **[Temporal](https://temporal.io/)** - Durable workflow orchestration for production deployments
+- **[Temporal OpenAI Agents Integration](https://github.com/temporalio/sdk-python/tree/main/temporalio/contrib/openai_agents)** - Production-ready agent workflow patterns
+- **[Rich](https://github.com/Textualize/rich)** - Beautiful terminal output and progress tracking
+- **[Python Ecosystem](https://www.python.org/)** - The amazing tools and libraries that make this possible
 
 
 ---
