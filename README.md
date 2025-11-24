@@ -275,7 +275,7 @@ pisa run .prismer/agent.md -i "Calculate [[1,2],[3,4]] × [[5,6],[7,8]], compute
 - ✅ Matrix operations (Function capability)
 - ✅ Softmax calculations (MCP capability)
 - ✅ Text-to-table conversion (Subagent capability)
-- ✅ Plan-Execute loop with OODA
+- ✅ Plan-Execute loop
 - ✅ Context management and persistence
 - ✅ Rich CLI output
 

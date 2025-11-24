@@ -18,7 +18,7 @@ Added
 **Core Framework**
 
 - 🎯 Markdown-based agent definition system (``agent.md`` format)
-- 🔄 Plan-Execute loop template with OODA (Observe-Orient-Decide-Act) support
+- 🔄 Plan-Execute loop template
 - 🛠️ Modular architecture with pluggable components
 - 📊 Capability system supporting three types: Functions, MCP Servers, and Subagents
 
