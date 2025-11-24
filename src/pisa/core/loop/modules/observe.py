@@ -786,7 +786,7 @@ Respond in JSON format:
             )
         
         # ===== 规则4: 计划健康度低 → REPLAN_ALL =====
-        if plan_obs.plan_health < self.config.replan_threshold:
+        if plan_obs and plan_obs.plan_health < self.config.replan_threshold:
             if self.observation_context.current_replan_count < self.observation_context.max_replans:
                 return DecisionResult(
                     action=ActionType.REPLAN_ALL,

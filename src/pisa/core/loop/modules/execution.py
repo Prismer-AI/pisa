@@ -464,7 +464,14 @@ class ExecutionModule(BaseModule):
         _logger.debug(f"Calling function: {capability.name}(**{arguments})")
         
         # 检查是否是 FunctionTool 对象（来自 OpenAI Agent SDK）
-        if hasattr(func, 'on_invoke_tool'):
+        # FunctionTool 有 on_invoke_tool 方法但自身不是 callable
+        is_function_tool = (
+            hasattr(func, 'on_invoke_tool') and
+            hasattr(func, 'name') and
+            hasattr(func, 'description')
+        )
+        
+        if is_function_tool:
             # 这是一个 FunctionTool 对象
             # on_invoke_tool 需要 (ctx: ToolContext, input: str)
             # 我们需要将参数转换为 JSON 字符串
@@ -500,7 +507,14 @@ class ExecutionModule(BaseModule):
                 loop = asyncio.get_event_loop()
                 result = await loop.run_in_executor(None, lambda: func(**arguments))
         else:
-            raise RuntimeError(f"Function {capability.name} is neither callable nor a FunctionTool")
+            # 增强错误信息，帮助调试
+            func_type = type(func).__name__
+            func_attrs = [attr for attr in dir(func) if not attr.startswith('_')][:10]  # 只显示前10个属性
+            raise RuntimeError(
+                f"Function {capability.name} is neither callable nor a FunctionTool. "
+                f"Type: {func_type}, Has on_invoke_tool: {hasattr(func, 'on_invoke_tool')}, "
+                f"Is callable: {callable(func)}, Attributes: {func_attrs}"
+            )
         
         return result
     
