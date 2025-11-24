@@ -5,17 +5,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pisa"
-version = "0.0.1"  # Placeholder for uv, actual version managed by setuptools-scm
-description = "Markdownic Agent Runtime Framework"
+version = "0.1.0"
+description = "Planning, Intelligent, Self-Adaptive Agent Framework - Build production-ready AI agents with markdown-defined workflows"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
     {name = "Winsahre Tom", email = "tanwenxuan@live.com"}
 ]
+keywords = ["ai", "agent", "llm", "openai", "temporal", "workflow", "markdown", "framework"]
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Programming Language :: Python",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
     "openai-agents>=0.5.0",
@@ -36,6 +43,15 @@ dependencies = [
 pisa = "pisa.cli.main:run"
 
 [project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+]
 testing = [
     "setuptools",
     "pytest",
@@ -46,8 +62,11 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/pyscaffold/pyscaffold/"
-Documentation = "https://pyscaffold.org/"
+Homepage = "https://github.com/Prismer-AI/pisa"
+Documentation = "https://github.com/Prismer-AI/pisa#readme"
+Repository = "https://github.com/Prismer-AI/pisa"
+Changelog = "https://github.com/Prismer-AI/pisa/blob/main/CHANGELOG.rst"
+"Bug Tracker" = "https://github.com/Prismer-AI/pisa/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

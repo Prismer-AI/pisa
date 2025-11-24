@@ -1,0 +1,30 @@
+# MANIFEST.in
+# Include documentation and configuration files
+
+include README.md
+include LICENSE.txt
+include CHANGELOG.rst
+include CONTRIBUTING.md
+include pyproject.toml
+include setup.cfg
+include setup.py
+include ruff.toml
+include .env.example
+
+# Include all markdown files in docs
+recursive-include docs *.md *.rst *.png *.jpg *.gif
+
+# Include agent templates and configuration
+recursive-include src/pisa/core/definition/templates *.md
+recursive-include src/pisa/core/loop/templates *.py
+
+# Include capability README files
+recursive-include src/pisa/capability *.md
+
+# Exclude unnecessary files
+global-exclude *.py[cod] __pycache__ *.so *.dylib
+prune tests
+prune example
+prune cache
+prune .github
+
