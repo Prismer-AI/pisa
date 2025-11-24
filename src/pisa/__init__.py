@@ -14,3 +14,15 @@ except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
 finally:
     del version, PackageNotFoundError
+
+# 导出配置类
+from pisa.config import Config
+from pisa.startup import initialize_pisa, validate_system_ready, quick_start
+
+__all__ = [
+    "__version__",
+    "Config",
+    "initialize_pisa",
+    "validate_system_ready",
+    "quick_start"
+]

@@ -1,0 +1,305 @@
+# Ruff configuration for PISA
+# Documentation: https://docs.astral.sh/ruff/
+
+# ============================================================
+# Basic Configuration
+# ============================================================
+
+# Target Python 3.11+ (same as project.requires-python in pyproject.toml)
+target-version = "py311"
+
+# Line length to match Black's default
+line-length = 100
+
+# Enable auto-fixing when possible
+fix = true
+
+# Show fix suggestions
+show-fixes = true
+
+# Exclude common directories
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "*.egg-info",
+    "__pycache__",
+    ".pytest_cache",
+    ".coverage",
+    "htmlcov",
+    "cache",
+]
+
+# ============================================================
+# Linting Rules
+# ============================================================
+
+[lint]
+# Enable specific rule sets
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort (import sorting)
+    "N",     # pep8-naming
+    "UP",    # pyupgrade (modernize Python code)
+    "YTT",   # flake8-2020 (misuse of sys.version)
+    "ASYNC", # flake8-async
+    "S",     # flake8-bandit (security)
+    "BLE",   # flake8-blind-except
+    "FBT",   # flake8-boolean-trap
+    "B",     # flake8-bugbear
+    "A",     # flake8-builtins
+    "COM",   # flake8-commas
+    "C4",    # flake8-comprehensions
+    "DTZ",   # flake8-datetimez
+    "T10",   # flake8-debugger
+    "EM",    # flake8-errmsg
+    "EXE",   # flake8-executable
+    "ISC",   # flake8-implicit-str-concat
+    "ICN",   # flake8-import-conventions
+    "G",     # flake8-logging-format
+    "INP",   # flake8-no-pep420
+    "PIE",   # flake8-pie
+    "T20",   # flake8-print
+    "PYI",   # flake8-pyi
+    "PT",    # flake8-pytest-style
+    "Q",     # flake8-quotes
+    "RSE",   # flake8-raise
+    "RET",   # flake8-return
+    "SLF",   # flake8-self
+    "SLOT",  # flake8-slots
+    "SIM",   # flake8-simplify
+    "TID",   # flake8-tidy-imports
+    "TCH",   # flake8-type-checking
+    "INT",   # flake8-gettext
+    "ARG",   # flake8-unused-arguments
+    "PTH",   # flake8-use-pathlib
+    "TD",    # flake8-todos
+    "FIX",   # flake8-fixme
+    "ERA",   # eradicate (commented-out code)
+    "PD",    # pandas-vet
+    "PGH",   # pygrep-hooks
+    "PL",    # Pylint
+    "TRY",   # tryceratops
+    "FLY",   # flynt (string formatting)
+    "NPY",   # NumPy-specific rules
+    "PERF",  # Perflint (performance anti-patterns)
+    "RUF",   # Ruff-specific rules
+]
+
+# Ignore specific rules
+ignore = [
+    # Conflicting with formatter
+    "W191",    # tab-indentation
+    "E111",    # indentation-with-invalid-multiple
+    "E114",    # indentation-with-invalid-multiple-comment
+    "E117",    # over-indented
+    "D206",    # indent-with-spaces
+    "D300",    # triple-single-quotes
+    "Q000",    # bad-quotes-inline-string
+    "Q001",    # bad-quotes-multiline-string
+    "Q002",    # bad-quotes-docstring
+    "Q003",    # avoidable-escaped-quote
+    "COM812",  # missing-trailing-comma
+    "COM819",  # prohibited-trailing-comma
+    "ISC001",  # single-line-implicit-string-concatenation
+    "ISC002",  # multi-line-implicit-string-concatenation
+
+    # Too strict for development
+    "S101",    # assert-used (we use asserts in tests)
+    "S311",    # suspicious-non-cryptographic-random-usage
+    "PLR0913", # too-many-arguments
+    "PLR0912", # too-many-branches
+    "PLR0915", # too-many-statements
+    "PLR2004", # magic-value-comparison
+    "FBT001",  # boolean-positional-arg-in-function-definition
+    "FBT002",  # boolean-default-arg-in-function-definition
+    "TD002",   # missing-todo-author
+    "TD003",   # missing-todo-link
+    "FIX002",  # line-contains-todo
+    "EM101",   # raw-string-in-exception
+    "EM102",   # f-string-in-exception
+    "TRY003",  # raise-vanilla-args
+    "PD901",   # pandas-df-variable-name
+
+    # Type checking - we use mypy for this
+    "ANN",     # flake8-annotations (use mypy instead)
+    
+    # Docstring rules - too strict for now
+    "D",       # pydocstyle (enable later when adding docstrings)
+    
+    # Import rules that conflict with our style
+    "TCH001",  # typing-only-first-party-import
+    "TCH002",  # typing-only-third-party-import
+    "TCH003",  # typing-only-standard-library-import
+]
+
+# Allow autofix for all enabled rules
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# ============================================================
+# Import Sorting (isort)
+# ============================================================
+
+[lint.isort]
+# Use src layout
+known-first-party = ["pisa"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+combine-as-imports = true
+force-wrap-aliases = true
+split-on-trailing-comma = true
+
+# ============================================================
+# Pylint Rules
+# ============================================================
+
+[lint.pylint]
+max-args = 8
+max-branches = 15
+max-returns = 8
+max-statements = 60
+
+# ============================================================
+# Flake8-Quotes
+# ============================================================
+
+[lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "double"
+multiline-quotes = "double"
+
+# ============================================================
+# McCabe Complexity
+# ============================================================
+
+[lint.mccabe]
+# Maximum allowed complexity
+max-complexity = 15
+
+# ============================================================
+# Flake8-Bugbear
+# ============================================================
+
+[lint.flake8-bugbear]
+# Allow default arguments that are mutable
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path"]
+
+# ============================================================
+# Per-File Ignores
+# ============================================================
+
+[lint.per-file-ignores]
+# Tests can use magic values, asserts, and have relaxed rules
+"tests/**/*.py" = [
+    "S101",    # assert-used
+    "PLR2004", # magic-value-comparison
+    "ARG001",  # unused-function-argument
+    "ARG002",  # unused-method-argument
+    "FBT001",  # boolean-positional-arg-in-function-definition
+    "PT004",   # pytest-missing-fixture-name-underscore
+    "PT011",   # pytest-raises-too-broad
+    "PT012",   # pytest-raises-with-multiple-statements
+    "SLF001",  # private-member-access
+]
+
+# __init__.py files can have unused imports
+"**/__init__.py" = [
+    "F401",    # unused-import
+    "F403",    # undefined-local-with-import-star
+    "E402",    # module-import-not-at-top-of-file
+]
+
+# Setup and configuration files
+"setup.py" = ["INP001"]
+"conftest.py" = ["INP001"]
+
+# Examples and scripts can be more lenient
+"example/**/*.py" = [
+    "T20",     # flake8-print (printing is OK in examples)
+    "INP001",  # implicit-namespace-package
+    "ERA001",  # commented-out-code
+]
+
+# CLI commands can print
+"src/pisa/cli/**/*.py" = [
+    "T20",     # flake8-print
+]
+
+# Temporal workflows have specific patterns
+"src/pisa/temporal/**/*.py" = [
+    "ARG001",  # unused-function-argument (workflow params)
+]
+
+# Allow skeleton.py to have relaxed rules
+"src/pisa/skeleton.py" = [
+    "T20",     # flake8-print
+]
+
+# ============================================================
+# Format Configuration (if using ruff format)
+# ============================================================
+
+[format]
+# Use double quotes for strings
+quote-style = "double"
+
+# Indent with spaces, not tabs
+indent-style = "space"
+
+# Respect magic trailing commas
+skip-magic-trailing-comma = false
+
+# Automatically detect line ending
+line-ending = "auto"
+
+# Enable preview features
+preview = false
+
+# Exclude the same directories as linting
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+

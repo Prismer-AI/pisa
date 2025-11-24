@@ -1,0 +1,37 @@
+[project]
+name = "agent_example"
+version = "0.1.0"
+description = "A PISA agent project"
+requires-python = ">=3.11"
+
+# ============ Custom Dependencies ============
+# This project is a PISA plugin/extension.
+# PISA framework must be installed separately:
+#   - Development: uv pip install -e /path/to/pisa
+#   - Production:  uv pip install pisa
+#
+# Only declare YOUR additional dependencies here:
+dependencies = [
+    # "pandas>=2.0.0",      # For data processing
+    # "numpy>=1.24.0",       # For numerical computing
+    # "requests>=2.31.0",    # For HTTP requests
+    # "scikit-learn>=1.3.0", # For machine learning
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[project.scripts]
+# Optional: Add custom CLI commands for your agent
+# agent_example = "capability.function.main:cli"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["capability*"]

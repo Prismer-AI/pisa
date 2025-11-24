@@ -1,0 +1,37 @@
+# Environment Variables
+.env
+
+# PISA Cache
+cache/context.md
+cache/*.json
+cache/*.pkl
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.gitkeep
