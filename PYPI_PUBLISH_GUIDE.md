@@ -78,12 +78,12 @@ Uploading pisa-0.1.0.tar.gz
 100% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB • 0:00:03
 
 View at:
-https://pypi.org/project/pisa/0.1.0/
+https://pypi.org/project/pisa-python/0.1.0/
 ```
 
 ### 步骤 6: 验证发布
 
-1. 访问 https://pypi.org/project/pisa/
+1. 访问 https://pypi.org/project/pisa-python/
 2. 检查项目信息是否正确
 3. 测试安装：
 
@@ -91,7 +91,7 @@ https://pypi.org/project/pisa/0.1.0/
 # 在新的虚拟环境中测试
 python -m venv test_env
 source test_env/bin/activate
-pip install pisa
+pip install pisa-python
 
 # 验证安装
 pisa --version

@@ -7,10 +7,10 @@
   
   *Build production-ready AI agents with markdown-defined workflows*
   
+  [![PyPI version](https://img.shields.io/pypi/v/pisa-python.svg)](https://pypi.org/project/pisa-python/)
   [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
   [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.txt)
   [![OpenAI Agent SDK](https://img.shields.io/badge/OpenAI-Agent%20SDK-412991.svg)](https://openai.github.io/openai-agents-python/)
-  [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
   
   [Quick Start](#-quick-start) •
   [Documentation](#-documentation) •
